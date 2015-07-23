@@ -45,5 +45,6 @@ Temporary Items
 node_modules
 *.bak
 *.*.bak
-+npm-debug.log
-+quiz.sqlite
+npm-debug.log
+quiz.sqlite
+.env
