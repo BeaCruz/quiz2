@@ -34,3 +34,8 @@ exports.answer = function(req, res) {
   }
   res.render('quizes/answer', {quiz: req.quiz, respuesta: resultado});
 };
+
+// GET /author
+exports.author = function(req, res) {
+   res.render('author', {nombre: 'Bea'});
+};
