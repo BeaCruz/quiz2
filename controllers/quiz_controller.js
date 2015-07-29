@@ -14,7 +14,7 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
-  var filtro = '';
+//  var filtro = '';
   var busqueda = req.query.search;
   console.log('busqueda -->' + busqueda);
   if(busqueda != 'undefined' && busqueda != null){
@@ -28,7 +28,7 @@ exports.index = function(req, res) {
 	  busqueda = '%';
   }
   console.log(busqueda);
-  console.log(filtro);
+  //console.log(filtro);
   
   models.Quiz.findAll({where: ["pregunta like ?", busqueda]}).then(
     function(quizes) {
@@ -54,4 +54,22 @@ exports.answer = function(req, res) {
 // GET /author
 exports.author = function(req, res) {
    res.render('author', {nombre: 'Bea'});
+};
+
+// GET /quizes/new
+exports.new = function(req, res) {
+  var quiz = models.Quiz.build(
+    {pregunta: "Pregunta", respuesta: "Respuesta"}
+  );
+  res.render('quizes/new', {quiz: quiz});
+};
+
+// POST /quizes/create
+exports.create = function(req, res) {
+  var quiz = models.Quiz.build( req.body.quiz );
+
+// guarda en DB los campos pregunta y respuesta de quiz
+  quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+    res.redirect('/quizes');  
+  })   // res.redirect: Redirección HTTP a lista de preguntas
 };
