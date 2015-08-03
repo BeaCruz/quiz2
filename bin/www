@@ -5,6 +5,14 @@
  */
 
 var app = require('../app');
+var fs = require("fs");
+var https = require("https");
+
+var options = {
+    key: fs.readFileSync('certs/quiz2-key.pem').toString(),
+    cert: fs.readFileSync('certs/quiz2-cert.pem').toString()
+};
+
 var debug = require('debug')('quiz2:server');
 var http = require('http');
 
@@ -28,6 +36,12 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+
+var serverSecure = https.createServer(options, app);
+serverSecure.listen(8443, function() {
+  debug('Express server listening on port ' + server.address().port);
+});
 
 /**
  * Normalize a port into a number, string, or false.
