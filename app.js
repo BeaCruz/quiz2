@@ -40,6 +40,28 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.use(function(req, res, next){
+	console.log('appuse');
+	//var tiempoMaxInactivo = 30000;
+	var tiempoMaxInactivo = 10000;
+	if (req.session.user) { //Si se ha iniciado sesion comprobamos que no ha expirado
+		console.log('logado');
+		console.log(req.session.user);
+		console.log(req.session.horaExpira);
+		if (req.session.horaExpira > (new Date()).getTime()) { // Si no ha expirado Actualizamos hora de expiracion
+			req.session.horaExpira = (new Date()).getTime() + tiempoMaxInactivo;
+			console.log('if horaExpira> getTiem');
+			next();
+		} else {
+			console.log('sesion.destroy');
+			req.session.destroy(); // Si la sesion ha expirado la cerramos
+			res.redirect('/');
+		}
+	} else {
+		next(); // Si no había sesión iniciada no hacemos nada
+	}
+});
+
 app.use('/', routes);
 
 // catch 404 and forward to error handler
@@ -74,6 +96,5 @@ app.use(function(err, req, res, next) {
     errors:[]
   });
 });
-
 
 module.exports = app;
